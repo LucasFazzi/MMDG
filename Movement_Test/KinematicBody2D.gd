@@ -5,7 +5,7 @@ export var MOVE_SPEED = 300
 export var JUMP_FORCE = 1100
 export var GRAVITY = 50
 export var MAX_FALL_SPEED = 1000
-export var y_velo = 0
+export var Y_VELO = 0
 
 
 func _ready():
@@ -27,9 +27,9 @@ func move():
 	elif Input.is_action_pressed("move_left"):
 		move_dir -= 1
 
-	move_and_slide(Vector2(move_dir * MOVE_SPEED, y_velo), Vector2(0, -1)).normalized()
+	move_and_slide(Vector2(move_dir * MOVE_SPEED, Y_VELO), Vector2(0, -1)).normalized()
 #movimento em eixo y; lembrando que Godot o eixo y é ao contrário
-	y_velo += GRAVITY
+	Y_VELO += GRAVITY
 
 #pulo do Mario; boosta conforme o player soca o dedo
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
@@ -38,15 +38,15 @@ func move():
 		jump_cut()
 
 	while is_on_ceiling():
-		y_velo += GRAVITY
+		Y_VELO += GRAVITY
 		return
-	while y_velo > MAX_FALL_SPEED:
-		y_velo = MAX_FALL_SPEED
+	while Y_VELO > MAX_FALL_SPEED:
+		Y_VELO = MAX_FALL_SPEED
 		return
 
 func jump():
-	y_velo = - JUMP_FORCE
+	Y_VELO = - JUMP_FORCE
 
 func jump_cut():
-	if y_velo < -100:
-		y_velo = -70
+	if Y_VELO < -100:
+		Y_VELO = -70

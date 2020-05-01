@@ -4,8 +4,10 @@ extends KinematicBody2D
 export var MOVE_SPEED = 300
 export var JUMP_FORCE = 1100
 export var GRAVITY = 50
+export var GRAVITY_WALL = 10
 export var MAX_FALL_SPEED = 1000
 export var Y_VELO = 0
+export var JUMP = true
 
 
 func _ready():
@@ -32,10 +34,20 @@ func move():
 	Y_VELO += GRAVITY
 
 #pulo do Mario; boosta conforme o player soca o dedo
-	if is_on_floor() and Input.is_action_just_pressed("jump"):
-		jump()
+	if Input.is_action_pressed("jump"):
+		while is_on_floor() and JUMP == true:
+			JUMP = false
+			jump()
+			return
+		if is_on_wall():
+			grab()
+			while Input.is_action_just_pressed("jump"):
+				jump()
+				return
+
 	elif Input.is_action_just_released("jump"):
 		jump_cut()
+#tentativa de fazer um grab wall meio vagabundo
 
 	while is_on_ceiling():
 		Y_VELO += GRAVITY
@@ -43,10 +55,18 @@ func move():
 	while Y_VELO > MAX_FALL_SPEED:
 		Y_VELO = MAX_FALL_SPEED
 		return
+	while is_on_floor():
+		JUMP = true
+		return
+
+func grab():
+		Y_VELO = GRAVITY_WALL
+		JUMP = true
 
 func jump():
 	Y_VELO = - JUMP_FORCE
-
+	JUMP = true
 func jump_cut():
-	if Y_VELO < -100:
+	while Y_VELO < -100:
 		Y_VELO = -70
+		return

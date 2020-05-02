@@ -11,5 +11,6 @@ a gente manja de jogar mas vamos ver se manja de fazer
 3 - Adicionem as mudanças no Read.Me
 
 MUDANÇAS:
+- Sistema de pastas corrigido; pulo duplo corrigido (para can_jump e is_jumping)
 - Movimento do Player funfando; direita e esquerda e pulo; ele também tem double jump e um grab wall (ainda meio ruim, está muito preciso);
 - PRECISA AJEITAR: grab; aceleração do Player (no momento, ele anda em movimento constante); sistema de pulo quando is_on_floor para ele não ficar quicando. 

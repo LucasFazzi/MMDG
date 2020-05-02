@@ -6,6 +6,7 @@ export var gravity = 50
 export var friction_wall = 10
 export var y_velo = 0
 export var jump_count = 2
+export var life = 3
 
 func _ready():
 	add_group()
@@ -17,6 +18,9 @@ func _physics_process(delta):
 	on_ceiling()
 	on_floor()
 
+func _process(delta):
+	check_death()
+
 func add_group():
 	#adicionar ao grupo player; se quiser alguma func chamando por grupo, facilita
 	get_node(".").add_to_group("player")
@@ -24,7 +28,6 @@ func add_group():
 func move():
 	#movimento em eixo x
 	var move_dir = 0
-
 	if Input.is_action_pressed("move_right"):
 		move_dir += 1
 	elif Input.is_action_pressed("move_left"):
@@ -42,6 +45,7 @@ func on_wall():
 		return
 
 func on_floor():
+	#contadores em solo e input do pulo
 	while is_on_floor():
 		if jump_count < 2:
 			jump_count = 2
@@ -65,7 +69,7 @@ func on_ceiling():
 			y_velo += gravity
 		return
 
-#funcs de agarrar wall e pulo
+#funcs de agarrar wall, ceiling e pulos
 func grab_wall():
 	jump_count = 3
 	y_velo = friction_wall
@@ -84,3 +88,32 @@ func jump_cut():
 	while y_velo < -100:
 		y_velo = -70
 		return
+
+#hit do player
+func _on_Player_Hit_hit():
+	get_node("Player_Sprite").set_modulate(Color(255,0,0))
+	var waiting_timer = Timer.new()
+	waiting_timer.set_wait_time(0.05)
+	waiting_timer.set_one_shot(true)
+	call_deferred("add_child", waiting_timer)
+	waiting_timer.set_autostart(true)
+	yield(waiting_timer, "timeout")
+	get_node("Player_Sprite").set_modulate(Color(255,255,255))
+	life -= 1
+	get_node("CanvasLayer/Player_Life").emit_signal("update")
+	move_hit()
+#auto-explicativo
+func move_hit():
+	if y_velo >= gravity:
+		jump()
+	if test_move(transform,Vector2(1,0)):
+		position.x -= 35
+	elif test_move(transform,Vector2(-1,0)):
+		position.x += 35
+
+#checar vidas
+func check_death():
+	if life > 0:
+		pass
+	else:
+		get_tree().call_deferred("reload_current_scene")

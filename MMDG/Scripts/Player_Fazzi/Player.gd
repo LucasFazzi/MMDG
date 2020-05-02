@@ -53,6 +53,7 @@ func fall():
 
 	while is_on_ceiling():
 		Y_VELO += GRAVITY
+		return
 
 #funcs de agarrar e pulo
 func grab():

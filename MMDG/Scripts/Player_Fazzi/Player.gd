@@ -12,6 +12,7 @@ func _ready():
 
 func _physics_process(delta):
 	move()
+	fall()
 
 func add_group():
 	#adicionar ao grupo player; se quiser alguma func chamando por grupo, facilita
@@ -25,8 +26,9 @@ func move():
 		MOVE_DIR += 1
 	elif Input.is_action_pressed("move_left"):
 		MOVE_DIR -= 1
+	move_and_slide(Vector2(MOVE_DIR * MOVE_SPEED, Y_VELO), Vector2(0, -1), false, 4, 0.785398, true)
 
-	move_and_slide(Vector2(MOVE_DIR * MOVE_SPEED, Y_VELO), Vector2(0, -1)).normalized()
+func fall():
 #movimento em eixo y; lembrando que Godot o eixo y é ao contrário
 	Y_VELO += GRAVITY
 

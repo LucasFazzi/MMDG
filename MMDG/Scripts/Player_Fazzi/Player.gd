@@ -13,6 +13,9 @@ func _ready():
 func _physics_process(delta):
 	move()
 	fall()
+	on_wall()
+	on_ceiling()
+	on_floor()
 
 func add_group():
 	#adicionar ao grupo player; se quiser alguma func chamando por grupo, facilita
@@ -32,10 +35,13 @@ func fall():
 #movimento em eixo y; lembrando que Godot o eixo y é ao contrário
 	Y_VELO += GRAVITY
 
+func on_wall():
 #funcs físicas (parede, chão etc.)
 	while is_on_wall():
-		grab()
+		grab_wall()
 		return
+
+func on_floor():
 	while is_on_floor():
 		if JUMP_COUNT < 2:
 			JUMP_COUNT = 2
@@ -51,14 +57,27 @@ func fall():
 			jump()
 		return
 
+func on_ceiling():
 	while is_on_ceiling():
-		Y_VELO += GRAVITY
+		if Input.is_action_pressed("move_up"):
+			grab_ceiling()
+		else:
+			Y_VELO += GRAVITY
 		return
 
 #funcs de agarrar e pulo
-func grab():
+func grab_wall():
 	JUMP_COUNT = 3
 	Y_VELO = FRICTION_WALL
+func grab_ceiling():
+	Y_VELO -= GRAVITY
+	var waiting_timer = Timer.new()
+	waiting_timer.set_wait_time(1.5)
+	waiting_timer.set_one_shot(true)
+	call_deferred("add_child", waiting_timer)
+	waiting_timer.set_autostart(true)
+	yield(waiting_timer, "timeout")
+	Y_VELO += GRAVITY
 func jump():
 	Y_VELO =- JUMP_FORCE
 func jump_cut():

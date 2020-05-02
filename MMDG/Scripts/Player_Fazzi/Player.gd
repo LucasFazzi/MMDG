@@ -4,7 +4,6 @@ export var MOVE_SPEED = 300
 export var JUMP_FORCE = 1100
 export var GRAVITY = 50
 export var GRAVITY_WALL = 10
-export var MAX_FALL_SPEED = 1000
 export var Y_VELO = 0
 export var JUMP_COUNT = 2
 
@@ -52,10 +51,6 @@ func move():
 
 	while is_on_ceiling():
 		Y_VELO += GRAVITY
-		return
-	if Y_VELO > MAX_FALL_SPEED:
-		Y_VELO = MAX_FALL_SPEED
-		return
 
 #funcs de agarrar e pulo
 func grab():

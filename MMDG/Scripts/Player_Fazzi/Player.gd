@@ -48,8 +48,6 @@ func move():
 		if Input.is_action_just_pressed("jump") and JUMP_COUNT > 1:
 			JUMP_COUNT -= 1
 			jump()
-		else:
-			pass
 		return
 
 	while is_on_ceiling():

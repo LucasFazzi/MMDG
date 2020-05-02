@@ -2,8 +2,8 @@
 a gente manja de jogar mas vamos ver se manja de fazer
 
 1 - por favor, mantenham o padrão do arquivo: 
-1.1 - Scenes com maisculas e underline pra dividir se mais de uma palavra
-1.2 - VAR em minúscula (se ela vai virar constante, pode ser maiúscula)
+1.1 - Scenes com primeira letra em Upper e resto em Lower e underline pra dividir se mais de uma palavra
+1.2 - VAR em minúscula
 1.3 - CONST em maíscula
 
 2 - Comentem os arquivos 

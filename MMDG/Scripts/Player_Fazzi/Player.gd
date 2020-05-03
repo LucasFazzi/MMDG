@@ -1,12 +1,15 @@
 extends KinematicBody2D
 
-export var move_speed = 300
-export var jump_force = 1100
-export var gravity = 50
-export var friction_wall = 10
-export var y_velo = 0
-export var jump_count = 2
-export var life = 3
+var move_speed = 300
+var jump_force = 1100
+var gravity = 50
+var friction_wall = 10
+var y_velo = 0
+var max_y_velo = 1000
+var jump_count = 2
+var life = 3
+var move_dir
+
 
 func _ready():
 	add_group()
@@ -17,9 +20,11 @@ func _physics_process(delta):
 	on_wall()
 	on_ceiling()
 	on_floor()
+	attack()
 
 func _process(delta):
 	check_death()
+	check_max_y_velo()
 
 func add_group():
 	#adicionar ao grupo player; se quiser alguma func chamando por grupo, facilita
@@ -27,7 +32,7 @@ func add_group():
 
 func move():
 	#movimento em eixo x
-	var move_dir = 0
+	move_dir = 0
 	if Input.is_action_pressed("move_right"):
 		move_dir += 1
 	elif Input.is_action_pressed("move_left"):
@@ -37,6 +42,30 @@ func move():
 func fall():
 #movimento em eixo y; lembrando que Godot o eixo y é ao contrário
 	y_velo += gravity
+
+func check_max_y_velo():
+#y continua calculando no delta; para evitar que aumente a velocidade acima da gravidade
+	if y_velo > max_y_velo:
+		y_velo = max_y_velo
+#move do colisor de hitbox para ataque
+func attack():
+	while Input.is_action_just_pressed("attack"):
+		if Input.is_action_pressed("move_right"):
+			get_node("Player_Hit_Attack/Player_Col_Attack").position.x = 45
+		if Input.is_action_pressed("move_left"):
+			get_node("Player_Hit_Attack/Player_Col_Attack").position.x = -45
+		if Input.is_action_pressed("move_up"):
+			get_node("Player_Hit_Attack/Player_Col_Attack").position.y = -45
+		if Input.is_action_pressed("move_down"):
+			get_node("Player_Hit_Attack/Player_Col_Attack").position.y = 45
+		var waiting_timer = Timer.new()
+		waiting_timer.set_wait_time(0.1)
+		waiting_timer.set_one_shot(true)
+		call_deferred("add_child", waiting_timer)
+		waiting_timer.set_autostart(true)
+		yield(waiting_timer, "timeout")
+		get_node("Player_Hit_Attack/Player_Col_Attack").position = Vector2(0,0)
+		return
 
 func on_wall():
 #funcs físicas (parede, chão etc.)
@@ -63,25 +92,24 @@ func on_floor():
 #agarrada no teto
 func on_ceiling():
 	while is_on_ceiling():
-		if Input.is_action_pressed("move_up"):
+		if Input.is_action_pressed("move_up") or Input.is_action_pressed("grab_up"):
 			grab_ceiling()
-		else:
-			y_velo += gravity
 		return
-
 #funcs de agarrar wall, ceiling e pulos
 func grab_wall():
 	jump_count = 3
 	y_velo = friction_wall
 func grab_ceiling():
 	y_velo -= gravity
+	jump_count = 3
 	var waiting_timer = Timer.new()
 	waiting_timer.set_wait_time(1.5)
 	waiting_timer.set_one_shot(true)
 	call_deferred("add_child", waiting_timer)
 	waiting_timer.set_autostart(true)
 	yield(waiting_timer, "timeout")
-	y_velo += gravity
+	fall()
+
 func jump():
 	y_velo =- jump_force
 func jump_cut():
@@ -89,7 +117,15 @@ func jump_cut():
 		y_velo = -70
 		return
 
-#hit do player
+#signal hit do player no ataque
+func _on_Player_Hit_Attack_attack_scenario():
+	move_dir = -move_dir
+	y_velo = -y_velo
+func _on_Player_Hit_Attack_attack_enemie():
+	move_dir = -move_dir
+	y_velo = -y_velo
+
+#signal hit do player em vida
 func _on_Player_Hit_hit():
 	get_node("Player_Sprite").set_modulate(Color(255,0,0))
 	var waiting_timer = Timer.new()
@@ -110,7 +146,6 @@ func move_hit():
 		position.x -= 35
 	elif test_move(transform,Vector2(-1,0)):
 		position.x += 35
-
 #checar vidas
 func check_death():
 	if life > 0:

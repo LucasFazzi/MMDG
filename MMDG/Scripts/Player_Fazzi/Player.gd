@@ -1,15 +1,17 @@
 extends KinematicBody2D
 
-var move_speed = 300
-var jump_force = 1100
-var gravity = 50
-var friction_wall = 10
+var move_speed = lerp(300,295,2)
+var jump_force = lerp(1100,1090,2)
+var move_dir_vel = lerp(1,0,0.25)
+var move_dir
+var gravity = lerp(50,47,1)
+var friction_wall = lerp(10,7,1.5)
 var y_velo = 0
-var max_y_velo = 1000
+var y_velo_jump_cut = lerp(-70,-65,1)
+var max_y_velo = lerp(1000,980,2)
 var jump_count = 2
 var life = 3
-var move_dir
-
+var can_hurt = true
 
 func _ready():
 	add_group()
@@ -23,8 +25,8 @@ func _physics_process(delta):
 	attack()
 
 func _process(delta):
-	check_death()
 	check_max_y_velo()
+	restart()
 
 func add_group():
 	#adicionar ao grupo player; se quiser alguma func chamando por grupo, facilita
@@ -34,10 +36,14 @@ func move():
 	#movimento em eixo x
 	move_dir = 0
 	if Input.is_action_pressed("move_right"):
-		move_dir += 1
+		move_dir += move_dir_vel
 	elif Input.is_action_pressed("move_left"):
-		move_dir -= 1
+		move_dir -= move_dir_vel
 	move_and_slide(Vector2(move_dir * move_speed, y_velo), Vector2(0, -1), false, 4, 0.785398, true).normalized()
+
+func restart():
+	if Input.is_action_just_pressed("reload"):
+		get_tree().reload_current_scene()
 
 func fall():
 #movimento em eixo y; lembrando que Godot o eixo y é ao contrário
@@ -51,21 +57,41 @@ func check_max_y_velo():
 func attack():
 	while Input.is_action_just_pressed("attack"):
 		if Input.is_action_pressed("move_right"):
-			get_node("Player_Hit_Attack/Player_Col_Attack").position.x = 45
-		if Input.is_action_pressed("move_left"):
-			get_node("Player_Hit_Attack/Player_Col_Attack").position.x = -45
-		if Input.is_action_pressed("move_up"):
-			get_node("Player_Hit_Attack/Player_Col_Attack").position.y = -45
-		if Input.is_action_pressed("move_down"):
-			get_node("Player_Hit_Attack/Player_Col_Attack").position.y = 45
+			attack_pos(55,0,270)
+		elif Input.is_action_pressed("move_left"):
+			attack_pos(-55,0,270)
+		elif Input.is_action_pressed("move_up"):
+			attack_pos(0,-55,180)
+		elif Input.is_action_pressed("move_down"):
+			attack_pos(0,55,180)
+		else:
+			parry()
 		var waiting_timer = Timer.new()
-		waiting_timer.set_wait_time(0.1)
+		waiting_timer.set_wait_time(0.2)
 		waiting_timer.set_one_shot(true)
 		call_deferred("add_child", waiting_timer)
 		waiting_timer.set_autostart(true)
 		yield(waiting_timer, "timeout")
-		get_node("Player_Hit_Attack/Player_Col_Attack").position = Vector2(0,0)
+		attack_pos(0,0,0)
 		return
+func attack_pos(pos_x,pos_y,rot):
+	get_node("Player_Hit_Attack/Player_Col_Attack").position.x = pos_x
+	get_node("Player_Hit_Attack/Player_Col_Attack").position.y = pos_y
+	get_node("Player_Hit_Attack/Player_Col_Attack").rotation_degrees = rot
+
+func parry():
+	parry_turn(Vector2(1.5,1.5),Vector2(2.8,2.8),true)
+	var waiting_timer = Timer.new()
+	waiting_timer.set_wait_time(0.3)
+	waiting_timer.set_one_shot(true)
+	call_deferred("add_child", waiting_timer)
+	waiting_timer.set_autostart(true)
+	yield(waiting_timer, "timeout")
+	parry_turn(Vector2(1,1),Vector2(2.3,2.3),false)
+func parry_turn(body_scale,sprite_scale,hit_disabled):
+	get_node("Player_Col_Body").scale = body_scale
+	get_node("Player_Sprite").scale = sprite_scale
+	get_node("Player_Hit/Player_Col_Hit").disabled = hit_disabled
 
 func on_wall():
 #funcs físicas (parede, chão etc.)
@@ -74,7 +100,7 @@ func on_wall():
 		return
 
 func on_floor():
-	#contadores em solo e input do pulo
+#contadores em solo e input do pulo
 	while is_on_floor():
 		if jump_count < 2:
 			jump_count = 2
@@ -112,40 +138,64 @@ func grab_ceiling():
 
 func jump():
 	y_velo =- jump_force
+func jump_hit():
+	y_velo =- jump_force / 2
 func jump_cut():
 	while y_velo < -100:
-		y_velo = -70
+		y_velo = y_velo_jump_cut
 		return
 
 #signal hit do player no ataque
 func _on_Player_Hit_Attack_attack_scenario():
-	move_dir = -move_dir
-	y_velo = -y_velo
+	check_hit_attack()
 func _on_Player_Hit_Attack_attack_enemie():
-	move_dir = -move_dir
-	y_velo = -y_velo
+	check_hit_attack()
 
+func check_hit_attack():
+	while is_on_floor():
+		if Input.is_action_pressed("move_right"):
+			check_hit_pos(-10,3)
+		elif Input.is_action_pressed("move_left"):
+			check_hit_pos(10,3)
+		return
+	while not is_on_floor():
+		if Input.is_action_pressed("move_right"):
+			check_hit_pos(-10,3)
+		elif Input.is_action_pressed("move_left"):
+			check_hit_pos(10,3)
+		else:
+			y_velo = -y_velo
+			jump_count = 3
+		return
+func check_hit_pos(pos_x,jump_count):
+	global_position.x += pos_x
+	jump_count = 3
 #signal hit do player em vida
 func _on_Player_Hit_hit():
-	get_node("Player_Sprite").set_modulate(Color(255,0,0))
-	var waiting_timer = Timer.new()
-	waiting_timer.set_wait_time(0.05)
-	waiting_timer.set_one_shot(true)
-	call_deferred("add_child", waiting_timer)
-	waiting_timer.set_autostart(true)
-	yield(waiting_timer, "timeout")
-	get_node("Player_Sprite").set_modulate(Color(255,255,255))
-	life -= 1
-	get_node("CanvasLayer/Player_Life").emit_signal("update")
 	move_hit()
+	if can_hurt == true:
+		can_hurt = false
+		get_node("Player_Sprite").set_modulate(Color(255,0,0))
+		get_tree().paused = true
+		yield(get_tree().create_timer(0.400), 'timeout')
+		get_tree().paused = false
+		var waiting_timer = Timer.new()
+		waiting_timer.set_wait_time(0.05)
+		waiting_timer.set_one_shot(true)
+		call_deferred("add_child", waiting_timer)
+		waiting_timer.set_autostart(true)
+		yield(waiting_timer, "timeout")
+		get_node("Player_Sprite").set_modulate(Color(255,255,255))
+		life -= 1
+		check_death()
+		get_node("CanvasLayer/Player_Life").emit_signal("update")
+		can_hurt = true
 #auto-explicativo
 func move_hit():
-	if y_velo >= gravity:
-		jump()
-	if test_move(transform,Vector2(1,0)):
-		position.x -= 35
-	elif test_move(transform,Vector2(-1,0)):
-		position.x += 35
+	if is_on_ceiling():
+		fall()
+	else:
+		jump_hit()
 #checar vidas
 func check_death():
 	if life > 0:

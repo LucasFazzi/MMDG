@@ -16,8 +16,12 @@ _global_script_class_icons={
 [application]
 
 config/name="Movement Test"
-run/main_scene="res://Scenes/Levels/Level_1.tscn"
+run/main_scene="res://Scenes/Levels/Main_World.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global_Script="*res://Scripts/Global_Fazzi/Global.gd"
 
 [input]
 
@@ -125,6 +129,8 @@ reload={
 2d_physics/layer_1="tilemaps(wall)"
 2d_physics/layer_2="enemies(and shots)"
 2d_physics/layer_3="player(and attack)"
+2d_physics/layer_4="checkpoints(to player)"
+2d_physics/layer_5="doors (to player)"
 
 [rendering]
 

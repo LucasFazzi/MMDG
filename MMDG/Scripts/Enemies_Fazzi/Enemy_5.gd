@@ -1,23 +1,30 @@
 extends KinematicBody2D
 
 var life = 2
-var play_style = [1,2]
 var can_hurt = true
+var is_visible = false
 
 func _ready():
 	add_group()
-	move()
-
 
 func add_group():
 	get_node(".").add_to_group("enemies")
 
-func _process(delta):
+func _physics_process(delta):
 	check_life()
+	check_if_visible()
+
+func check_if_visible():
+	if get_node("Enemy_5_Visibility").is_on_screen():
+		is_visible = true
+	else:
+		is_visible = false
+
+	if is_visible == true:
+		move()
 
 func move():
-	get_node("Enemy_5_Animation_Move").play("move")
-
+		get_node("Enemy_5_Animation_Move").play("move")
 
 func _on_Enemy_5_Hit_area_entered(area):
 	if area.is_in_group("player_attack") and can_hurt == true:

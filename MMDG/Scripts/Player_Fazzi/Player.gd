@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal reload
+
 var move_speed = lerp(300,295,2)
 var jump_force = lerp(1100,1090,2)
 var move_dir_vel = lerp(1,0,0.25)
@@ -12,6 +14,7 @@ var max_y_velo = lerp(1000,980,2)
 var jump_count = 2
 var life = 3
 var can_hurt = true
+var get_checkpoint
 
 func _ready():
 	add_group()
@@ -27,10 +30,12 @@ func _physics_process(delta):
 func _process(delta):
 	check_max_y_velo()
 	restart()
+	get_checkpoint()
 
 func add_group():
 	#adicionar ao grupo player; se quiser alguma func chamando por grupo, facilita
 	get_node(".").add_to_group("player")
+	Global_Script.global_player = self
 
 func move():
 	#movimento em eixo x
@@ -119,22 +124,18 @@ func on_floor():
 func on_ceiling():
 	while is_on_ceiling():
 		if Input.is_action_pressed("move_up") or Input.is_action_pressed("grab_up"):
-			grab_ceiling()
+			var waiting_timer = Timer.new()
+			waiting_timer.set_wait_time(0.5)
+			waiting_timer.set_one_shot(true)
+			call_deferred("add_child", waiting_timer)
+			waiting_timer.set_autostart(true)
+			yield(waiting_timer, "timeout")
+			fall()
 		return
 #funcs de agarrar wall, ceiling e pulos
 func grab_wall():
 	jump_count = 3
 	y_velo = friction_wall
-func grab_ceiling():
-	y_velo -= gravity
-	jump_count = 3
-	var waiting_timer = Timer.new()
-	waiting_timer.set_wait_time(1.5)
-	waiting_timer.set_one_shot(true)
-	call_deferred("add_child", waiting_timer)
-	waiting_timer.set_autostart(true)
-	yield(waiting_timer, "timeout")
-	fall()
 
 func jump():
 	y_velo =- jump_force
@@ -196,9 +197,16 @@ func move_hit():
 		fall()
 	else:
 		jump_hit()
+
+func get_checkpoint():
+	get_checkpoint = Global_Script.global_checkpoint_hit
+
 #checar vidas
 func check_death():
 	if life > 0:
 		pass
 	else:
-		get_tree().call_deferred("reload_current_scene")
+		if get_checkpoint == null:
+			emit_signal("reload")
+		else:
+			emit_signal("reload")

@@ -55,4 +55,8 @@ shape = SubResource( 2 )
 
 [node name="Boss_1_Animation" type="AnimationPlayer" parent="Boss_1_KinematicBody"]
 anims/move = SubResource( 3 )
+
+[node name="Boss_1_Visibility" type="VisibilityNotifier2D" parent="Boss_1_KinematicBody"]
+position = Vector2( 133.402, 90.3657 )
+scale = Vector2( 21.2348, 19.2654 )
 [connection signal="area_entered" from="Boss_1_KinematicBody/Boss_1_Hit" to="Boss_1_KinematicBody" method="_on_Boss_1_Hit_area_entered"]

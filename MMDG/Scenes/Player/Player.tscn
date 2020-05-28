@@ -16,7 +16,6 @@ extents = Vector2( 33.2647, 32.7786 )
 extents = Vector2( 35.4443, 34.9816 )
 
 [node name="Player" type="KinematicBody2D"]
-position = Vector2( 106.001, 36.2636 )
 collision_layer = 4
 collision_mask = 3
 script = ExtResource( 2 )
@@ -45,7 +44,7 @@ current = true
 limit_left = -50000000
 limit_top = -50000000
 limit_right = 50000000
-limit_bottom = 50000
+limit_bottom = 200
 
 [node name="Player_Hit" type="Area2D" parent="."]
 collision_layer = 0

@@ -49,5 +49,7 @@ shape = SubResource( 2 )
 
 [node name="Enemy_2_Animation_Move" type="AnimationPlayer" parent="Enemy_2_KinematicBody"]
 anims/move = SubResource( 3 )
+
+[node name="Enemy_2_Visibility" type="VisibilityNotifier2D" parent="Enemy_2_KinematicBody"]
+scale = Vector2( 2.04, 2.04 )
 [connection signal="area_entered" from="Enemy_2_KinematicBody/Enemy_2_Hit" to="Enemy_2_KinematicBody" method="_on_Enemy_2_Hit_area_entered"]
-[connection signal="animation_finished" from="Enemy_2_KinematicBody/Enemy_2_Animation_Move" to="Enemy_2_KinematicBody" method="_on_Enemy_2_Animation_Move_animation_finished"]

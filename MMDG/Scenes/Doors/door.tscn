@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Sprites/Player/MMDG-2.png.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Doors_Fazzi/door.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 20.5058, 35.7952 )
+
+[node name="door" type="Area2D"]
+collision_layer = 16
+collision_mask = 4
+script = ExtResource( 2 )
+
+[node name="dool_col" type="CollisionShape2D" parent="."]
+scale = Vector2( 1, 1.03538 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 1, 2 )
+texture = ExtResource( 1 )
+[connection signal="body_entered" from="." to="." method="_on_door_body_entered"]

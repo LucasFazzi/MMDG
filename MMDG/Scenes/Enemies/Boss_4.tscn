@@ -1,9 +1,10 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Sprites/Enemies/MMDG-1.png (1).png" type="Texture" id=1]
-[ext_resource path="res://Scripts/Enemies_Fazzi/Boss_4.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Enemies/Boss_4.gd" type="Script" id=2]
 [ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Random/WAV/Random 3 - Sound effects Pack 2.wav" type="AudioStream" id=3]
 [ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Coins/WAV/Coins 3 - Sound effects Pack 2.wav" type="AudioStream" id=4]
+
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 15.3226, 15.3184 )

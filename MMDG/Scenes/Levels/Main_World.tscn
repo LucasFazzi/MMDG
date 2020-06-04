@@ -12,7 +12,7 @@
 [ext_resource path="res://Scenes/Enemies/Enemy_6.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Doors/door.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Scenes/Levels/Boss_1.tscn" type="PackedScene" id=12]
-[ext_resource path="res://Scripts/Main_World_Fazzi/Main_World.gd" type="Script" id=13]
+[ext_resource path="res://Scripts/Main_World/Main_World.gd" type="Script" id=13]
 [ext_resource path="res://Scenes/Block/Block.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Scenes/Levels/Boss_2.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Sprites/Scenario/MMDG-1.png.png" type="Texture" id=16]
@@ -21,6 +21,7 @@
 [ext_resource path="res://Scenes/Levels/Boss_4.tscn" type="PackedScene" id=19]
 [ext_resource path="res://Scenes/Enemies/Enemy_8.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Scenes/Levels/Boss_5.tscn" type="PackedScene" id=21]
+
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 19.8818, 10 )

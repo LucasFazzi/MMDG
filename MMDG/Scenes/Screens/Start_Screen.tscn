@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Sprites/Scenario/MMDG-1.png.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Screens/strat_screen.png" type="Texture" id=2]
-[ext_resource path="res://Scripts/Screen_Fazzi/Start_Screen.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/Screen/Start_Screen.gd" type="Script" id=3]
 
 [node name="Start_Screen" type="Node2D"]
 script = ExtResource( 3 )

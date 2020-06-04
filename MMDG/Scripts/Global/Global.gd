@@ -25,6 +25,6 @@ func player_position():
 
 func update_time():
 	global_delta_cicle += 1
-	if global_delta_cicle >= 600:
+	if global_delta_cicle >= 300:
 		global_points += 1
 		global_delta_cicle = 0

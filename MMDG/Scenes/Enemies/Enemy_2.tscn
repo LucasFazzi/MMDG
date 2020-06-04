@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Sprites/Enemies/MMDG-1.png (1).png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Enemies_Fazzi/Enemy_2.gd" type="Script" id=2]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Coins/WAV/Coins 3 - Sound effects Pack 2.wav" type="AudioStream" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 15.4956, 15.3551 )
@@ -46,6 +47,9 @@ collision_mask = 4
 
 [node name="Enemy_2_Col_Hit" type="CollisionShape2D" parent="Enemy_2_KinematicBody/Enemy_2_Hit"]
 shape = SubResource( 2 )
+
+[node name="Enemy_Hit_SFX" type="AudioStreamPlayer" parent="Enemy_2_KinematicBody/Enemy_2_Hit"]
+stream = ExtResource( 3 )
 
 [node name="Enemy_2_Animation_Move" type="AnimationPlayer" parent="Enemy_2_KinematicBody"]
 anims/move = SubResource( 3 )

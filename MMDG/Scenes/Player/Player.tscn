@@ -1,10 +1,17 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Sprites/Player/MMDG-2.png.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Player_Fazzi/Player.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/Player_Fazzi/Player_Hit.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/Player_Fazzi/Player_Life_Text.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/Screens/Death_Screen.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scripts/Player_Fazzi/Player_Hit_Attack.gd" type="Script" id=6]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Hit/WAV/Hit 3 - Sound effects Pack 2.wav" type="AudioStream" id=7]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Jump/WAV/Jump 10 - Sound effects Pack 2.wav" type="AudioStream" id=8]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Laser-weapon/WAV/Laser-weapon 8 - Sound effects Pack 2.wav" type="AudioStream" id=9]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Lose/WAV/Lose 2 - Sound effects Pack 2.wav" type="AudioStream" id=10]
+[ext_resource path="res://Scripts/Player_Fazzi/Player_Time.gd" type="Script" id=11]
+[ext_resource path="res://Fonts/Minecraft.ttf" type="DynamicFontData" id=12]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 31.5184, 31.5293 )
@@ -14,6 +21,10 @@ extents = Vector2( 33.2647, 32.7786 )
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 35.4443, 34.9816 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 24
+font_data = ExtResource( 12 )
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 4
@@ -68,6 +79,33 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Player_Time" type="RichTextLabel" parent="CanvasLayer"]
+margin_left = 1228.35
+margin_top = 73.056
+margin_right = 1899.35
+margin_bottom = 268.056
+custom_fonts/normal_font = SubResource( 4 )
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Death_Screen" parent="CanvasLayer" instance=ExtResource( 5 )]
+position = Vector2( 66.9896, 10.739 )
+
+[node name="Player_Hit_SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
+[node name="Player_Attack_SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+
+[node name="Player_Jump_SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+volume_db = -5.0
+
+[node name="Player_GameOver_SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
 [connection signal="attack_enemie" from="Player_Hit_Attack" to="." method="_on_Player_Hit_Attack_attack_enemie"]
 [connection signal="attack_scenario" from="Player_Hit_Attack" to="." method="_on_Player_Hit_Attack_attack_scenario"]
 [connection signal="body_entered" from="Player_Hit_Attack" to="Player_Hit_Attack" method="_on_Player_Hit_Attack_body_entered"]

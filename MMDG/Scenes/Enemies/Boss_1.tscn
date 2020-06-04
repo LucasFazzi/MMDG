@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Sprites/Enemies/MMDG-1.png (1).png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Enemies_Fazzi/Boss_1.gd" type="Script" id=2]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Random/WAV/Random 3 - Sound effects Pack 2.wav" type="AudioStream" id=3]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Coins/WAV/Coins 3 - Sound effects Pack 2.wav" type="AudioStream" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 15.3226, 15.3184 )
@@ -59,4 +61,10 @@ anims/move = SubResource( 3 )
 [node name="Boss_1_Visibility" type="VisibilityNotifier2D" parent="Boss_1_KinematicBody"]
 position = Vector2( 133.402, 90.3657 )
 scale = Vector2( 21.2348, 19.2654 )
+
+[node name="Boss_Hit_SFX" type="AudioStreamPlayer" parent="Boss_1_KinematicBody"]
+stream = ExtResource( 4 )
+
+[node name="Boss_Death_SFX" type="AudioStreamPlayer" parent="Boss_1_KinematicBody"]
+stream = ExtResource( 3 )
 [connection signal="area_entered" from="Boss_1_KinematicBody/Boss_1_Hit" to="Boss_1_KinematicBody" method="_on_Boss_1_Hit_area_entered"]

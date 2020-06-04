@@ -1,0 +1,73 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Sprites/Enemies/MMDG-1.png (1).png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Enemies_Fazzi/Boss_5.gd" type="Script" id=2]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Random/WAV/Random 3 - Sound effects Pack 2.wav" type="AudioStream" id=3]
+[ext_resource path="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Coins/WAV/Coins 3 - Sound effects Pack 2.wav" type="AudioStream" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 15.3226, 15.3184 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 17.1154, 17.0044 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "move"
+length = 16.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.5, 4, 5.5, 7, 7.7, 8.2, 8.8, 9.3, 10, 11, 11.5, 13, 14 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 944.559, -69.9513 ), Vector2( 6.63559, -163.844 ), Vector2( 950.361, 8.06943 ), Vector2( 651.036, -320.956 ), Vector2( 523.148, -1.08169 ), Vector2( 57.2914, -315.687 ), Vector2( 761.792, -127.811 ), Vector2( 514.85, -23.2663 ), Vector2( 284.251, -106.181 ), Vector2( 47.986, -1.63625 ), Vector2( 482.252, -316.657 ), Vector2( 948.963, 8.69975 ), Vector2( 494.83, -150.962 ), Vector2( 485.281, -309.075 ) ]
+}
+
+[node name="Boss_5_Root" type="Node2D"]
+position = Vector2( -1.496, -1.069 )
+script = ExtResource( 2 )
+
+[node name="Boss_5_Visibility" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 407.012, -79.2072 )
+scale = Vector2( 58.1767, 44.8275 )
+
+[node name="Boss_5_KinematicBody" type="KinematicBody2D" parent="."]
+position = Vector2( 494.83, -150.962 )
+scale = Vector2( 5, 5 )
+collision_layer = 2
+collision_mask = 7
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Boss_5_Sprite" type="Sprite" parent="Boss_5_KinematicBody"]
+modulate = Color( 0.356863, 0.364706, 0.352941, 1 )
+scale = Vector2( 1, 1.19048 )
+texture = ExtResource( 1 )
+
+[node name="Boss_5_Col" type="CollisionShape2D" parent="Boss_5_KinematicBody"]
+scale = Vector2( 1, 1.19048 )
+shape = SubResource( 1 )
+
+[node name="Boss_5_Hit" type="Area2D" parent="Boss_5_KinematicBody"]
+scale = Vector2( 1, 1.19048 )
+collision_layer = 2
+collision_mask = 4
+
+[node name="Boss_5_Col_Hit" type="CollisionShape2D" parent="Boss_5_KinematicBody/Boss_5_Hit"]
+shape = SubResource( 2 )
+
+[node name="Boss_5_Animation" type="AnimationPlayer" parent="Boss_5_KinematicBody"]
+anims/move = SubResource( 3 )
+
+[node name="Boss_Hit_SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+
+[node name="Boss_Death_SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+[connection signal="area_entered" from="Boss_5_KinematicBody/Boss_5_Hit" to="." method="_on_Boss_5_Hit_area_entered"]

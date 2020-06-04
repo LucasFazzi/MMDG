@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Hit 3 - Sound effects Pack 2.wav-88ede93b2ae460aba68e42a24815a38d.sample"
+
+[deps]
+
+source_file="res://SFX/Sound effects Pack 2/Sound effects Pack 2/Hit/WAV/Hit 3 - Sound effects Pack 2.wav"
+dest_files=[ "res://.import/Hit 3 - Sound effects Pack 2.wav-88ede93b2ae460aba68e42a24815a38d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

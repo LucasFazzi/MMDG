@@ -21,7 +21,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Global_Script="*res://Scripts/Global_Fazzi/Global.gd"
+Global_Script="*res://Scripts/Global/Global.gd"
 
 [input]
 
